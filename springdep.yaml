@@ -22,10 +22,7 @@ spec:
         ports:
           - name: http
             containerPort: 8089
-        resources:
-          limits:
-            cpu: 0.2
-            memory: "200Mi"
+        
         env:
         - name: SPRING_DATASOURCE_URL
           value: "jdbc:mysql://mysql-standalone:3306/achatdb?createDatabaseIfNotExist=true&useSSL=false"
