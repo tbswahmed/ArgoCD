@@ -29,11 +29,11 @@ spec:
               name: mysql-config-map
               key: mysql-database-name
         - name: MYSQL_ROOT_PASSWORD
-          value: "rootpassword123"
+          value: "root"
         - name: MYSQL_USER
-          value: "myuser"
+          value: "root"
         - name: MYSQL_PASSWORD
-          value: "userpassword123"
+          value: "root"
         livenessProbe:
           tcpSocket:
             port: 3306
