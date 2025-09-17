@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mysql-app
-  namespace: default
+  namespace: argocd
   labels:
     app: mysql-app
 spec:
