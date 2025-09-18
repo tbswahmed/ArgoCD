@@ -1,0 +1,16 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: angular
+  namespace: argocd
+  labels:
+    app.kubernetes.io/instance: spring-app
+spec:
+  to:
+    kind: Service
+    name: angular-frontend
+  tls: null
+  host: angular-agrocd.apps.openshift.onetech-group.corp
+  port:
+    targetPort: 8080
+  alternateBackends: []
