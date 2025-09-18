@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mysql-app
-  namespace: argocd
+  namespace: spring-app
   labels:
     app: mysql-app
 spec:
@@ -23,57 +23,30 @@ spec:
       - image: mysql:5.6
         name: mysql
         env:
-        - name: MYSQL_ROOT_PASSWORD
-          value: "root"
         - name: MYSQL_DATABASE
-          value: "achatdb"
-        args:
-        - "--default-authentication-plugin=mysql_native_password"
+          valueFrom:
+            configMapKeyRef:
+              name: mysql-config-map
+              key: mysql-database-name
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secrets
+              key: mysql-root-password
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secrets
+              key: mysql-user-password
         livenessProbe:
           tcpSocket:
             port: 3306
-          initialDelaySeconds: 45
-          periodSeconds: 10
-        readinessProbe:
-          exec:
-            command:
-            - mysqladmin
-            - ping
-            - -h
-            - localhost
-            - -u
-            - root
-            - -proot
-          initialDelaySeconds: 30
-          periodSeconds: 5---
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: mysql-init-script
-  namespace: argocd
-data:
-  01-init-root-user.sql: |
-    -- Create root user for remote access
-    CREATE USER IF NOT EXISTS 'root'@'%' IDENTIFIED BY 'root';
-    GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
-    
-    -- Ensure root can connect from localhost too
-    ALTER USER 'root'@'localhost' IDENTIFIED BY 'root';
-    
-    -- Create database if not exists
-    CREATE DATABASE IF NOT EXISTS achatdb;
-    
-    -- Flush privileges to apply changes
-    FLUSH PRIVILEGES;
         ports:
         - containerPort: 3306
           name: mysql
         volumeMounts:
         - name: mysql-persistent-storage
           mountPath: /var/lib/mysql
-        - name: mysql-init-script          # ← ConfigMap volume mount
-          mountPath: /docker-entrypoint-initdb.d  # ← MySQL init directory
-          readOnly: true
       volumes:
       - name: mysql-persistent-storage
         persistentVolumeClaim:
@@ -81,3 +54,4 @@ data:
       - name: mysql-init-script            # ← Volume from ConfigMap
         configMap:
           name: mysql-init-script          # ← References ConfigMap name above
+
