@@ -16,7 +16,7 @@ spec:
       containers:
       - name: angular-frontend
         #image: tybahmed/front:v1
-        image: tybahmed/angular-fixed:v1
+        image: tybahmed/angular-fixed:v2
         ports:
         - containerPort: 80
         env:
