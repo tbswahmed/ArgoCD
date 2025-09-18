@@ -20,7 +20,7 @@ spec:
         tier: mysql
     spec:
       containers:
-      - image: mysql:8.0
+      - image: mysql: 5.6
         name: mysql
         env:
         - name: MYSQL_ROOT_PASSWORD
@@ -45,7 +45,26 @@ spec:
             - root
             - -proot
           initialDelaySeconds: 30
-          periodSeconds: 5
+          periodSeconds: 5---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-init-script
+  namespace: argocd
+data:
+  01-init-root-user.sql: |
+    -- Create root user for remote access
+    CREATE USER IF NOT EXISTS 'root'@'%' IDENTIFIED BY 'root';
+    GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
+    
+    -- Ensure root can connect from localhost too
+    ALTER USER 'root'@'localhost' IDENTIFIED BY 'root';
+    
+    -- Create database if not exists
+    CREATE DATABASE IF NOT EXISTS achatdb;
+    
+    -- Flush privileges to apply changes
+    FLUSH PRIVILEGES;
         ports:
         - containerPort: 3306
           name: mysql
