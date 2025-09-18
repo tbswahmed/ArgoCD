@@ -20,30 +20,45 @@ spec:
         tier: mysql
     spec:
       containers:
-      - image: mysql:5.6
+      - image: mysql:8.0
         name: mysql
         env:
-        - name: MYSQL_DATABASE
-          valueFrom:
-            configMapKeyRef:
-              name: mysql-config-map
-              key: mysql-database-name
         - name: MYSQL_ROOT_PASSWORD
           value: "root"
-        - name: MYSQL_USER
-          value: "root"
-        - name: MYSQL_PASSWORD
-          value: "root"
+        - name: MYSQL_DATABASE
+          value: "achatdb"
+        args:
+        - "--default-authentication-plugin=mysql_native_password"
         livenessProbe:
           tcpSocket:
             port: 3306
+          initialDelaySeconds: 45
+          periodSeconds: 10
+        readinessProbe:
+          exec:
+            command:
+            - mysqladmin
+            - ping
+            - -h
+            - localhost
+            - -u
+            - root
+            - -proot
+          initialDelaySeconds: 30
+          periodSeconds: 5
         ports:
         - containerPort: 3306
           name: mysql
         volumeMounts:
         - name: mysql-persistent-storage
           mountPath: /var/lib/mysql
+        - name: mysql-init-script          # ← ConfigMap volume mount
+          mountPath: /docker-entrypoint-initdb.d  # ← MySQL init directory
+          readOnly: true
       volumes:
       - name: mysql-persistent-storage
         persistentVolumeClaim:
           claimName: mysql-pvc
+      - name: mysql-init-script            # ← Volume from ConfigMap
+        configMap:
+          name: mysql-init-script          # ← References ConfigMap name above
