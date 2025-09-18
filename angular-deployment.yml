@@ -18,7 +18,7 @@ spec:
         #image: tybahmed/front:v1
         image: tybahmed/angular-fixed:v2
         ports:
-        - containerPort: 80
+        - containerPort: 8080
         env:
         - name: BASEURL
           value: "http://pacemacker-1.onetech-group.corp" 
