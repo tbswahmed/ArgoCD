@@ -41,6 +41,9 @@ spec:
         volumeMounts:
         - name: mysql-persistent-storage
           mountPath: /var/lib/mysql
+        - name: mysql-init-script          # ← ADDED: Mount the init script
+          mountPath: /docker-entrypoint-initdb.d
+          readOnly: true
       volumes:
       - name: mysql-persistent-storage
         persistentVolumeClaim:
