@@ -30,10 +30,10 @@ spec:
               key: mysql-database-name
         - name: MYSQL_ROOT_PASSWORD
           value: "root"
-        - name: MYSQL_USER
-          value: "root"
-        - name: MYSQL_PASSWORD
-          value: "root"
+        #- name: MYSQL_USER
+         # value: "root"
+        #- name: MYSQL_PASSWORD
+        #  value: "root"
         livenessProbe:
           tcpSocket:
             port: 3306
