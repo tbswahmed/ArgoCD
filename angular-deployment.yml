@@ -17,7 +17,7 @@ spec:
       - name: angular-frontend
         #image: tybahmed/front:v1
         #image: tybahmed/angular-fixed:v2
-        image: tybahmed/angular-frontlatest:v1
+        image: tybahmed/angular-frontlatest:v2
         ports:
         - containerPort: 8080
         env:
