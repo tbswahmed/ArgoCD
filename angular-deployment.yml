@@ -21,7 +21,7 @@ spec:
         - containerPort: 8080
         env:
         - name: BASEURL
-          value: "app-spring-argocd.apps.openshift.onetech-group.corp/SpringMVC/facture/retrieve-all-factures" 
+          value: "app-spring-argocd.apps.openshift.onetech-group.corp" 
         - name: PORT
           value: "31771"                          
         resources:
